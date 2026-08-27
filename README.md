@@ -1,2 +1,2 @@
-# charter-rewards-api
-Spring Boot Rewards API for Charter API Developer job position
+# rewards-api
+Spring Boot API for calculating customer rewards
