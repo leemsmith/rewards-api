@@ -2,6 +2,7 @@ package com.rewards.controller;
 
 import com.rewards.service.RewardsService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,9 +14,9 @@ public class RewardsController {
         this.rewardsService = rewardsService;
     }
 
-    @GetMapping("/rewards")
-    public String getRewards() {
-        Integer rewards = rewardsService.calculateRewards();
+    @GetMapping("/rewards/{customerId}")
+    public String getRewards(@PathVariable("customerId") Long customerId) {
+        Integer rewards = rewardsService.calculateRewards(customerId);
         return "Rewards points: " + rewards;
     }
 }
