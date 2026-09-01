@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
+import com.rewards.dto.RewardsDTO;
 import com.rewards.exception.CustomerNotFoundException;
 import com.rewards.model.Transaction;
 import com.rewards.repository.CustomerRepository;
@@ -23,7 +24,7 @@ public class RewardsService {
         this.transactionRepository = transactionRepository;
     }
 
-    public Integer calculateRewards(Long customerId) {
+    public RewardsDTO calculateRewards(Long customerId) {
         Map<YearMonth, Integer> monthlyTotals = new HashMap<>();
 
         // Check if customer exists
@@ -39,7 +40,11 @@ public class RewardsService {
             monthlyTotals.merge(yearMonth, rewardPoints, Integer::sum);
         }
         
-        return monthlyTotals.values().stream().mapToInt(Integer::intValue).sum();
+        // Calculate total rewards
+        int totalRewards = monthlyTotals.values().stream().mapToInt(Integer::intValue).sum();
+
+        // Return response object
+        return new RewardsDTO(customerId, monthlyTotals, totalRewards);
     }
 
     private int calculateRewardPoints(BigDecimal amount) {
