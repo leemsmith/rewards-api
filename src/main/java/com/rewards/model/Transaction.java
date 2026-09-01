@@ -13,6 +13,9 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * JPA entity representing an individual purchase made by a customer.
+ */
 @Entity
 @Table(name = "transaction")
 public class Transaction {
@@ -34,6 +37,13 @@ public class Transaction {
     protected Transaction() {
     }
 
+    /**
+     * Creates a transaction linked to a customer.
+     *
+     * @param customer customer who made the purchase
+     * @param amount total amount of the transaction
+     * @param transactionDate date when the purchase occurred
+     */
     public Transaction(Customer customer, BigDecimal amount, LocalDate transactionDate) {
         this.customer = customer;
         this.amount = amount;

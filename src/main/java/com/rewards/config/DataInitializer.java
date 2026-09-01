@@ -14,17 +14,32 @@ import com.rewards.model.Transaction;
 import com.rewards.repository.CustomerRepository;
 import com.rewards.repository.TransactionRepository;
 
+/**
+ * Loads a set of sample customer and transaction records when the application starts, used for
+ * demonstrating the Rewards API.
+ */
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
 
+    /**
+     * Creates the initializer with the required repositories.
+     *
+     * @param customerRepository repository used to persist customer records
+     * @param transactionRepository repository used to persist transaction records
+     */
     public DataInitializer(CustomerRepository customerRepository, TransactionRepository transactionRepository) {
         this.customerRepository = customerRepository;
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * Seeds the database with sample customers and transactions.
+     *
+     * @param args runtime arguments passed by Spring Boot
+     */
     @Override
     public void run(String... args) {
         Customer anna = customerRepository.save(new Customer("Anna", "Smith"));
@@ -51,6 +66,13 @@ public class DataInitializer implements CommandLineRunner {
         transactionRepository.saveAll(transactions);
     }
 
+    /**
+     * Creates a date for the seeded records using a fixed sample year.
+     *
+     * @param month target month for the transaction
+     * @param dayOfMonth target day of month for the transaction
+     * @return a LocalDate used in the seed dataset
+     */
     private LocalDate date(Month month, int dayOfMonth) {
         return LocalDate.of(2026, month, dayOfMonth);
     }

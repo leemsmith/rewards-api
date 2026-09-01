@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * JPA entity representing a customer.
+ */
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -24,6 +27,12 @@ public class Customer {
     protected Customer() {
     }
 
+    /**
+     * Creates a customer with the specified first and last name.
+     *
+     * @param firstName customer first name
+     * @param lastName customer last name
+     */
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

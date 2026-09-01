@@ -13,6 +13,9 @@ import com.rewards.model.Transaction;
 import com.rewards.repository.CustomerRepository;
 import com.rewards.repository.TransactionRepository;
 
+/**
+ * Service responsible for calculating customer reward points based on their transactions.
+ */
 @Service
 public class RewardsService {
 
@@ -24,6 +27,13 @@ public class RewardsService {
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * Calculates monthly and total reward points for a customer.
+     *
+     * @param customerId ID of the customer to calculate rewards for
+     * @return reward summary with monthly breakdown and overall total
+     * @throws CustomerNotFoundException when the customer does not exist
+     */
     public RewardsDTO calculateRewards(Long customerId) {
         Map<YearMonth, Integer> monthlyTotals = new HashMap<>();
 
@@ -47,6 +57,16 @@ public class RewardsService {
         return new RewardsDTO(customerId, monthlyTotals, totalRewards);
     }
 
+    /**
+     * Converts a purchase amount into reward points using the following rules:
+     * <ul>
+     *   <li>No reward points for purchases up to $50.</li>
+     *   <li>1 point for each dollar spent on purchases between $50 and $100.</li>
+     *   <li>2 points for each dollar spent on purchases over $100.</li>
+     * </ul>
+     * @param amount transaction amount
+     * @return calculated reward points for the transaction
+     */
     private int calculateRewardPoints(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.valueOf(50)) <= 0) {
             return 0;
