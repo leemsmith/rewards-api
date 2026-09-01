@@ -36,13 +36,13 @@ public class RewardsService {
             if (total.compareTo(BigDecimal.ZERO) > 0) {
                 totalRewards += total.intValue();
             } else {
-                break;
+                continue;
             }
             total = total.subtract(BigDecimal.valueOf(50));
             if (total.compareTo(BigDecimal.ZERO) > 0) {
                 totalRewards += total.intValue();
             } else {
-                break;
+                continue;
             }
         }
         return totalRewards;
