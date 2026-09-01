@@ -2,10 +2,9 @@ package com.rewards.service;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 
 import com.rewards.exception.CustomerNotFoundException;
@@ -25,39 +24,31 @@ public class RewardsService {
     }
 
     public Integer calculateRewards(Long customerId) {
-        Integer totalRewards = 0;
+        Map<YearMonth, Integer> monthlyTotals = new HashMap<>();
+
+        // Check if customer exists
         if (!customerRepository.existsById(customerId)) {
             throw new CustomerNotFoundException(customerId);
         }
-        Map<YearMonth, BigDecimal> monthlyTotals = getMonthlyTotals(customerId);
-        for (Map.Entry<YearMonth, BigDecimal> entry : monthlyTotals.entrySet()) {
-            BigDecimal total = entry.getValue();
-            total = total.subtract(BigDecimal.valueOf(50));
-            if (total.compareTo(BigDecimal.ZERO) > 0) {
-                totalRewards += total.intValue();
-            } else {
-                continue;
-            }
-            total = total.subtract(BigDecimal.valueOf(50));
-            if (total.compareTo(BigDecimal.ZERO) > 0) {
-                totalRewards += total.intValue();
-            } else {
-                continue;
-            }
+
+        // Calculate rewards for each transaction
+        List<Transaction> transactions = transactionRepository.findByCustomerId(customerId);
+        for (Transaction transaction : transactions) {
+            YearMonth yearMonth = YearMonth.from(transaction.getTransactionDate());
+            Integer rewardPoints = calculateRewardPoints(transaction.getAmount());
+            monthlyTotals.merge(yearMonth, rewardPoints, Integer::sum);
         }
-        return totalRewards;
+        
+        return monthlyTotals.values().stream().mapToInt(Integer::intValue).sum();
     }
 
-    private Map<YearMonth, BigDecimal> getMonthlyTotals(Long customerId) {
-        List<Transaction> transactions = transactionRepository.findByCustomerId(customerId);
-        return transactions.stream()
-                .collect(Collectors.groupingBy(
-                        t -> YearMonth.from(t.getTransactionDate()),
-                        Collectors.reducing(
-                                BigDecimal.ZERO,
-                                Transaction::getAmount,
-                                BigDecimal::add
-                        )
-                ));
+    private int calculateRewardPoints(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.valueOf(50)) <= 0) {
+            return 0;
+        } else if (amount.compareTo(BigDecimal.valueOf(100)) <= 0) {
+            return amount.subtract(BigDecimal.valueOf(50)).intValue();
+        } else {
+            return 50 + (amount.subtract(BigDecimal.valueOf(100)).intValue() * 2);
+        }
     }
 }
