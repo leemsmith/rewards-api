@@ -44,7 +44,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         Customer anna = customerRepository.save(new Customer("Anna", "Smith"));
         Customer bob = customerRepository.save(new Customer("Bob", "Williams"));
-        Customer sue = customerRepository.save(new Customer("Sue", "Johnson"));
+        Customer chris = customerRepository.save(new Customer("Chris", "Johnson"));
 
         List<Transaction> transactions = new ArrayList<>();
 
@@ -58,10 +58,10 @@ public class DataInitializer implements CommandLineRunner {
         transactions.add(new Transaction(bob, new BigDecimal("63.25"), date(Month.JULY, 22)));
         transactions.add(new Transaction(bob, new BigDecimal("155.95"), date(Month.AUGUST, 16)));
 
-        transactions.add(new Transaction(sue, new BigDecimal("97.80"), date(Month.JUNE, 9)));
-        transactions.add(new Transaction(sue, new BigDecimal("9.77"), date(Month.JUNE, 20)));
-        transactions.add(new Transaction(sue, new BigDecimal("100.00"), date(Month.JULY, 20)));
-        transactions.add(new Transaction(sue, new BigDecimal("100.01"), date(Month.AUGUST, 29)));
+        transactions.add(new Transaction(chris, new BigDecimal("97.80"), date(Month.JUNE, 9)));
+        transactions.add(new Transaction(chris, new BigDecimal("9.77"), date(Month.JUNE, 20)));
+        transactions.add(new Transaction(chris, new BigDecimal("100.00"), date(Month.JULY, 20)));
+        transactions.add(new Transaction(chris, new BigDecimal("100.01"), date(Month.AUGUST, 29)));
 
         transactionRepository.saveAll(transactions);
     }
